@@ -29,11 +29,11 @@ class Wallpaper{
         //播放模式
         mode:Mode.img,
         //内容是否随机播放
-        contentRandom:true,
+        contentRandom:false,
         //是否循环 图片如果循环 那么就相当于静态壁纸
         loop:false,
         //时间间隔
-        duration:3000,
+        duration:5000,
         //显示时间
         isTime:true,
         //显示用户语
@@ -60,7 +60,7 @@ class Wallpaper{
     }
 
     initDefault(){
-
+        this.next();
     }
     //初始化轮播
     initTimer(){
@@ -71,18 +71,7 @@ class Wallpaper{
         let {img,video,audio} = this.resources;
         switch (mode){
             case Mode.img:
-                this.timer=setInterval(()=>{
-                    let curIndex=img.findIndex(i=>i.src==this.content?.src),
-                    len=img.length;
-                    //资源变量
-                    let index;
-                    let resource;
-                    //内容随机 就给随机数
-                    index=contentRandom?this.randomIndex(len,curIndex):(curIndex+1)%len;
-                    resource=img[index];
-                    console.log(index,len,curIndex,resource)
-                    this.setContent(resource);
-                },duration);
+                this.timer=setInterval(()=>this.next(),duration);
                 break;
             case Mode.video:
 
@@ -92,25 +81,38 @@ class Wallpaper{
                 break;
         }
     }
+    next(){
+        let {contentRandom}=this.Setting;
+        let {img,video,audio} = this.resources;
+        let curIndex=img.findIndex(i=>i.src==this.content?.src),
+            len=img.length;
+        //资源变量
+        let index;
+        let resource;
+        //内容随机 就给随机数
+        index=contentRandom?this.randomIndex(len,curIndex):(curIndex + 1)%len;
+        resource=img[index];
+        this.setContent(resource);
+    }
     //设置内容
     setContent(resource){
         if(!resource)return;
         let contentDom;
         if(resource.type=="img"){
-            if(this.wallpaper.querySelector('.now-img')){
-                let lastDom=this.wallpaper.querySelector('.now-img');
+            let lastDom=this.wallpaper.querySelector('.now-img');
+            if(lastDom){
                 lastDom.classList.remove('now-img');
+                lastDom.classList.remove('show');
                 lastDom.classList.add('last-img');
-                //加特效
                 lastDom.classList.add('fade');
-                setTimeout(()=>lastDom.remove(),1500);
+                setTimeout(()=>lastDom.remove(),3000);
             }
             contentDom=document.createElement('img');
             contentDom.classList.add('now-img');
+            contentDom.classList.add('show');
             contentDom.alt=resource.name;
             contentDom.src=resource.src;
             contentDom.draggable=false;
-            contentDom.style.zIndex="1";
         }else if(resource.type=="video"){
             this.wallpaper.querySelector('video')?.remove();
             contentDom=document.createElement('video');
@@ -141,12 +143,14 @@ class Wallpaper{
                 let date=new Date().format("hh:mm:ss");;
                 let timeDom=this.wallpaper.querySelector('.time');
                 if(timeDom===null){
-                    let dom=document.createElement('div');
+                    let dom=document.createElement('div'),
+                    p=document.createElement('p');
                     dom.classList.add('time');
+                    dom.appendChild(p);
                     timeDom=dom;
                     this.wallpaper.appendChild(dom);
                 }
-                timeDom.innerText=date;
+                timeDom.querySelector('p').innerText=date;
             }else{
                 let timeDom=this.wallpaper.querySelector('.time');
                 if(timeDom){
@@ -185,9 +189,15 @@ class Wallpaper{
         });
         console.log("=========资源初始化完成=========",this.resources)
     }
+    initSetting(){
+        let settingDom = document.querySelector('.setting-button');
+        let settingPanel = document.querySelector('.setting');
+
+        settingDom.addEventListener('click',(e)=>{
+
+        })
+    }
 }
-
-
 
 //工具
 function getJson(){

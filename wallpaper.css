@@ -9,7 +9,7 @@
 #wallpaper{
     width: 100vw;
     height: 100vh;
-    background: #000000;/*基础背景色*/
+    background: rgba(0,0,0,0);/*基础背景色*/
     position: fixed;
     top: 0;
     left: 0;
@@ -25,35 +25,70 @@
     color: #FFFFFF;
     font-family: "jy";
     font-size: 36px;
+    z-index: 99;
 }
 #wallpaper img{
+    position: absolute;
+    top: 0;
+    left: 0;
     user-select: none;
     width: 100%;
     height: 100%;
     object-fit: fill;
     object-position: center;
 }
+.last-img{
+    z-index: 2;
+    opacity: 0;
+}
+.now-img{
+    z-index: 1;
+    opacity: 1;
+}
 #wallpaper video{
+    position: absolute;
+    top: 0;
+    left: 0;
     user-select: none;
     width: 100vw;
     height: 100vh;
     background: #000000;/*基础背景色*/
 }
 #wallpaper audio{
+    position: absolute;
+    top: 0;
+    left: 0;
     user-select: none;
     pointer-events: none;
     opacity: 0;
 }
 /*渐变效果*/
 .fade{
-    animation: fade linear .5s;
+    animation-name: aniFade;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
 }
-@keyframes fade {
+.show{
+    animation-name: aniShow;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+}
+@keyframes aniFade {
     from{
         opacity: 1;
     }
     to{
         opacity: 0;
+    }
+}
+@keyframes aniShow {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
     }
 }
 /*设置按钮*/
