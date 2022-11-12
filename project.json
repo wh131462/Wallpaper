@@ -1,0 +1,16 @@
+{
+  "file" : "index.html",
+  "general" :
+  {
+    "properties" :
+    {
+      "loop": {
+        "text": "循环播放",
+        "type": "bool",
+        "value": true
+      }
+    }
+  },
+  "title" : "Wallpaper - 定义自己的属性",
+  "type" : "web"
+}
