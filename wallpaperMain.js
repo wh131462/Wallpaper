@@ -34,9 +34,9 @@ class Wallpaper{
         //是否循环 图片如果循环 那么就相当于静态壁纸
         loop:false,
         //是否静音
-        mute:true,
+        mute:false,
         //时间间隔
-        duration:5000,
+        duration:3000,
         //////附加配置
         //显示时间
         isTime:true,
@@ -70,19 +70,23 @@ class Wallpaper{
             Object.assign(this.Setting,config);
         }
         this.resources=dir;
+        console.log("资源赋值",new Date().valueOf())
         this.initResources()
+        console.log("初始化数组",new Date().valueOf())
         this.initSetting();
+        console.log("初始化设置",new Date().valueOf())
     }
     //初始化函数
     init(){
-        this.initDefault();
         this.initTimer();
         this.initTime()
         this.initMotto();
+        this.initDefault();
     }
 
     initDefault(){
-        this.next();
+        console.log("初始化默认值",)
+        this.next(this.Setting.mode);
     }
     //初始化轮播
     initTimer(){
@@ -113,7 +117,7 @@ class Wallpaper{
             }
         })
     }
-    next(type){
+    next(type="img"){
         let {contentRandom}=this.Setting;
         let {img,video,audio} = this.resources;
         let curIndex,len;
@@ -180,11 +184,11 @@ class Wallpaper{
             contentDom.src=resource.src;
             contentDom.autoplay=true;
             contentDom.loop=this.Setting.loop;
-            contentDom.onloadeddata=(e)=>{
-                console.log("视频时长",contentDom.duration)
-                contentDom.currentTime=contentDom.duration-5;
-                console.dir(contentDom)
-            }
+            // contentDom.onloadeddata=(e)=>{
+            //     console.log("视频时长",contentDom.duration)
+            //     contentDom.currentTime=contentDom.duration-5;
+            //     console.dir(contentDom)
+            // }
             contentDom.onended=(e)=>{
                 console.log("视频播放结束");
                 if(!this.Setting.loop){
@@ -204,6 +208,9 @@ class Wallpaper{
             contentDom.loop=this.Setting.loop;
             contentDom.onended=(e)=>{
                 console.log("音频播放结束");
+                if(!this.Setting.loop){
+                    this.next('audio');
+                }
             }
         }
         this.content=resource;
@@ -393,6 +400,7 @@ function getJson(){
         if (request.status == 200) {/*返回状态为200，即为数据获取成功*/
             let json = JSON.parse(request.responseText);
             dir=json;
+            console.log("json 获取",new Date().valueOf())
         }
     }
 }
