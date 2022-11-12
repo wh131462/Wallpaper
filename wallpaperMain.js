@@ -1,9 +1,11 @@
+//资源列表生成
+let dir={};
+getJson();
 window.onload=()=>{
     console.log("欢迎使用Wallpaper --By:wh131462");
     let dom=document.querySelector('#wallpaper');
     const wallpaper=new Wallpaper(dom);
     wallpaper.init();
-    let file = new FileSystemDirectoryReader()
 }
 //Wallpaper Engine 属性监听对象
 window.wallpaperPropertyListener = {
@@ -27,7 +29,7 @@ class Wallpaper{
         //播放模式
         mode:Mode.img,
         //内容是否随机播放
-        contentRandom:false,
+        contentRandom:true,
         //是否循环 图片如果循环 那么就相当于静态壁纸
         loop:false,
         //时间间隔
@@ -41,24 +43,23 @@ class Wallpaper{
     content=null;//内容存放对象
     timer=null;//主计时器
     _timeTimer=null;//时间专用计时器
-    resources={
-        img:[],
-        audio:[],
-        video:[]
-    };
+    resources;
     constructor(dom,config) {
         this.wallpaper=dom;
         if(config){
             Object.assign(this.Setting,config);
         }
+        this.resources=dir;
+        this.initResources()
     }
     //初始化函数
     init(){
+        this.initDefault();
         this.initTimer();
         this.initTime()
     }
-    //初始化资源
-    initResources(){
+
+    initDefault(){
 
     }
     //初始化轮播
@@ -71,7 +72,7 @@ class Wallpaper{
         switch (mode){
             case Mode.img:
                 this.timer=setInterval(()=>{
-                    let curIndex=img.findIndex(i=>i==this.content),//todo 未确定资源对象的属性
+                    let curIndex=img.findIndex(i=>i.src==this.content?.src),
                     len=img.length;
                     //资源变量
                     let index;
@@ -79,8 +80,8 @@ class Wallpaper{
                     //内容随机 就给随机数
                     index=contentRandom?this.randomIndex(len,curIndex):(curIndex+1)%len;
                     resource=img[index];
-                    this.setContent();
-
+                    console.log(index,len,curIndex,resource)
+                    this.setContent(resource);
                 },duration);
                 break;
             case Mode.video:
@@ -92,14 +93,26 @@ class Wallpaper{
         }
     }
     //设置内容
-    setContent(resource,tag){
+    setContent(resource){
         if(!resource)return;
         let contentDom;
-        if(tag=="img"){
+        if(resource.type=="img"){
+            if(this.wallpaper.querySelector('.now-img')){
+                let lastDom=this.wallpaper.querySelector('.now-img');
+                lastDom.classList.remove('now-img');
+                lastDom.classList.add('last-img');
+                //加特效
+                lastDom.classList.add('fade');
+                setTimeout(()=>lastDom.remove(),1500);
+            }
             contentDom=document.createElement('img');
+            contentDom.classList.add('now-img');
             contentDom.alt=resource.name;
             contentDom.src=resource.src;
-        }else if(tag=="video"){
+            contentDom.draggable=false;
+            contentDom.style.zIndex="1";
+        }else if(resource.type=="video"){
+            this.wallpaper.querySelector('video')?.remove();
             contentDom=document.createElement('video');
             contentDom.src=resource.src;
             contentDom.autoplay=true;
@@ -107,9 +120,18 @@ class Wallpaper{
             contentDom.onended=(e)=>{
                 console.log("视频播放结束");
             }
-        }else if(tag=="audio"){
-
+        }else if(resource.type=="audio"){
+            this.wallpaper.querySelector('audio')?.remove();
+            contentDom=document.createElement('audio');
+            contentDom.src=resource.src;
+            contentDom.autoplay=true;
+            contentDom.loop=this.Setting.loop;
+            contentDom.onended=(e)=>{
+                console.log("音频播放结束");
+            }
         }
+        this.content=resource;
+        this.content.dom=contentDom;
         this.wallpaper.appendChild(contentDom);
     }
     //初始化时间
@@ -135,18 +157,51 @@ class Wallpaper{
     }
     //随机index
     randomIndex(len,index=-1){
-        if(len<2)return 0
+        console.log(len)
+        if(len<2)return 0;
         if(index==-1){
             return Math.floor(Math.random()*len);
         }else{
-            let i=this.randomIndex(len,index);
+            let i=Math.floor(Math.random()*len);
             return index==i?this.randomIndex(len,index):i;
         }
+    }
+    //初始化资源 刚开始获取到的只有一个简单的文件名字 需要将其对象补全
+    initResources(){
+        if(!this.resources){
+            throw new Error("未正确获取到资源，在确认资源存在于对应的文件夹下之后，请检查 【dir.json】 文件，若文件不正常，可以执行同级目录下的 【initDir.bat】 来初始化资源。")
+        }
+        Object.keys(this.resources).forEach(key=>{
+            if(Array.isArray(this.resources[key])){
+                this.resources[key]=this.resources[key].map(name=>{
+                    let item={
+                        name:name,
+                        src:`./resources/${key}/${name}`,
+                        type:key
+                    };
+                    return item;
+                });
+            }
+        });
+        console.log("=========资源初始化完成=========",this.resources)
     }
 }
 
 
+
 //工具
+function getJson(){
+    let url = './dir.json';
+    let request = new XMLHttpRequest();
+    request.open("get", url);/*设置请求方法与路径*/
+    request.send(null);/*不发送数据到服务器*/
+    request.onload = function () {/*XHR对象获取到返回信息后执行*/
+        if (request.status == 200) {/*返回状态为200，即为数据获取成功*/
+            let json = JSON.parse(request.responseText);
+            dir=json;
+        }
+    }
+}
 Date.prototype.format=function (fmt) {
     let o = {
         "M+" : this.getMonth()+1,                 //月份
