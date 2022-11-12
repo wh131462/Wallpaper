@@ -1,3 +1,41 @@
-.wallpaper{
+@font-face {
+    font-family:"jy";
+    src: url("./resources/fonts/造字工坊俊雅.otf");
+}
+*{
+    margin: 0;
+    padding: 0;
+}
+#wallpaper{
+    width: 100vw;
+    height: 100vh;
+    background: #000000;/*基础背景色*/
+}
+#wallpaper .time{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: #FFFFFF;
+    font-family: "jy";
+    font-size: 36px;
+}
+.setting-button{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    opacity: 0;
+}
+.setting-button:hover{
+    opacity: 1;
+}
+.setting-button img{
+    width: 30px;
+    height: 30px;
+}
+.setting{
+    position: fixed;
+    top: 0;
+    right: 0;
 
 }
