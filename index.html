@@ -9,18 +9,44 @@
     <meta name="Description" content="Wallpaper auto change">
     <meta name="author" content="wh131462">
     <link rel="shortcut icon" href="./resources/wh.ico">
-    <title>壁纸轮播</title>
+    <title>Wallpaper-播放你自己的媒体资源</title>
     <link rel="stylesheet" href="wallpaper.css">
-    <script src="./wallpaperMain.js"></script>
 </head>
 <body>
     <div id="wallpaper">
     </div>
+    <p id="log">
+    </p>
     <div class="setting-button">
         <img src="./resources/icon/setting.png" alt="设置">
     </div>
     <!--    设置界面-->
-    <div class="setting">
+    <div class="setting" hidden="hidden">
+        <div class="setting-div">
+            <div class="setting-title">
+                <p>媒体控制器</p>
+            </div>
+            <div class="setting-content">
+                <div class="player">
+                    <div class="info">
+                        <p class="title">当前音乐</p>
+                        <p class="time">2:00/3:00</p>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar">
+                            <div class="progress-point"></div>
+                        </div>
+                    </div>
+                    <div class="player-btn">
+                        <img src="./resources/icon/chevron-left.png" alt="上一个" id="pre">
+                        <img src="./resources/icon/play.png" alt="播放/暂停" id="play">
+                        <img src="./resources/icon/chevron-right.png" alt="下一个" id="next">
+                        <img src="./resources/icon/list.png" alt="列表" id="list" style="position:absolute;opacity: 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="./wallpaperMain.js"></script>
 </body>
 </html>

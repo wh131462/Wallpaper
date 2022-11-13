@@ -6,6 +6,27 @@
     margin: 0;
     padding: 0;
 }
+#log{
+    position: fixed;
+    left: 0;
+    bottom: 30px;
+    font-size: 16px;
+    font-family: "jy";
+    background: rgba(255,255,255,0.8);
+    padding: 10px;
+    height: 400px;
+    width: 300px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+#log p{
+    width: 100%;
+    white-space: break-spaces;
+    word-break: break-all;
+}
 #wallpaper{
     width: 100vw;
     height: 100vh;
@@ -130,8 +151,154 @@
     padding: 10px 30px;
     background: rgba(255,255,255,0.3);
     border-radius: 10px;
+    font-family: 'jy';
+    font-size: 12px;
+
 }
-.setting-div{}
-.setting-title{}
-.setting-content{}
-.setting-
+.setting-div{
+    width: 100%;
+    display: flex;
+    border-bottom: #131313 solid 1px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    padding-bottom: 10px;
+}
+.setting-div:last-child{
+    border-bottom: none;
+}
+.setting-title{
+    font-size: 14px;
+    padding-left: 10px;
+    position: relative;
+    margin: 10px 0;
+}
+.setting-title::before{
+    content: "";
+    height: 100%;
+    width: 5px;
+    position: absolute;
+    left: 0;
+    background: #131313;
+    border-radius: 5px;
+}
+.setting-content{
+    width: 100%;
+}
+.setting-input{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.setting-input .label{
+    padding:5px 0;
+}
+.setting-input input[type=text].input,
+.setting-input input[type=number].input{
+    font-size: 10px;
+    width: 100%;
+    border: none;
+    background: transparent;
+    border-bottom: #000 solid 1px;
+    outline: none;
+}
+.setting-input input[type=checkbox].input{
+    border: none;
+    background: transparent;
+    border-bottom: #000 solid 1px;
+    outline: none;
+}
+.setting-input .input button{
+    font-size: 10px;
+    border: none;
+    box-shadow: #131313 0px 0px 3px -1px;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+    padding:5px 10px;
+    margin: 5px 15px 5px 0px;
+}
+.setting-input .input button:hover{
+    background: rgba(255,255,255,0.3);
+}
+
+.player{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.player .info{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 200px;
+}
+.player .info .title{
+    width: 100%;
+    margin: 5px 0;
+    font-size: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.player .info .time{
+    white-space: nowrap;
+    font-size: 12px;
+    text-align: right;
+
+}
+.player .progress{
+    width: 100%;
+    height: 6px;
+    border-radius: 5px;
+    background: #e7e7e7;
+}
+.player .progress .progress-bar{
+    height: 100%;
+    width: 50%;
+    border-radius: 5px;
+    background: #0089ff;
+    position: relative;
+}
+.player .progress .progress-point{
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(4px,-1px);
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background: #ffffff;
+    /*animation-name: blink;*/
+    /*animation-duration: 5s;*/
+    /*animation-iteration-count: infinite;*/
+}
+/*todo 闪动动画*/
+@keyframes blink {
+    from{
+        box-shadow: rgba(0,0,0,0.3) 0px 0px 10px -1px;
+    }
+    to{
+        box-shadow: rgba(0,0,0,0.8) 0px 0px 10px -1px;
+    }
+}
+.player .player-btn{
+    width: 100%;
+    padding: 10px 0 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.player .player-btn img{
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}

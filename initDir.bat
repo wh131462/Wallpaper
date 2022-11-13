@@ -32,14 +32,14 @@ echo ],>>%json%
 ::video
 echo "video":[>>%json%
 cd %root%\resources\video
-for /f %%a in ('dir /b') do set end=%%a
+for /f "delims=" %%c in ('dir /b') do set end=%%c
 for /f "delims=" %%i in ('dir /b') do (
-if %end% == %%i (
+if %end%==%%i (
 echo "%%i">>%json%
 ) else (
 echo "%%i",>>%json%
 )
 )
 echo ]}>>%json%
-echo Success
+echo ScanIsSuccessful
 pause

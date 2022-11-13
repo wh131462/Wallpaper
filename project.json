@@ -1,16 +1,76 @@
 {
-  "file" : "index.html",
-  "general" :
-  {
-    "properties" :
-    {
-      "loop": {
-        "text": "循环播放",
-        "type": "bool",
-        "value": true
-      }
-    }
-  },
-  "title" : "Wallpaper - 定义自己的属性",
-  "type" : "web"
+	"file" : "index.html",
+	"general" : 
+	{
+		"properties" : 
+		{
+			"mode":{
+					"text" : "播放模式",
+					"options" :
+					[
+						{
+							"label" : "图片轮播",
+							"value" : "img"
+						},
+						{
+							"label" : "视频轮播",
+							"value" : "video"
+						},
+						{
+							"label" : "随机混播",
+							"value" : "random"
+						}
+					],
+					"type" : "combo",
+					"value" : "img"
+				},
+			"contentRandom":
+			{
+				"text" : "内容是否随机播放",
+				"type" : "bool",
+				"value" : true
+			},
+			"loop" :
+				{
+					"text" : "是否循环播放（图片模式设置循环 那么就相当于静态壁纸）",
+					"type" : "bool",
+					"value" : false
+				},
+			"mute":
+			{
+				"text" : "是否静音",
+				"type" : "bool",
+				"value" : false
+			},
+			"duration":{
+				"text" : "轮播间隔(只针对图片)",
+				"type" : "slider",
+				"step": 500,
+				"min": 0,
+				"max": 60000,
+				"value" : 3000
+			},
+			"isTime":
+			{
+				"text" : "是否显示时间",
+				"type" : "bool",
+				"value" : true
+			},
+			"isMotto":
+			{
+				"text" : "是否显示用户语",
+				"type" : "bool",
+				"value" : true
+			},
+			"motto": {
+				"text" : "用户语",
+				"type" : "text",
+				"value" : "无限进步"
+			}
+		}
+	},
+	"title" : "Wallpaper - 可以自定义资源的轮播壁纸",
+	"authors": ["wh13462"],
+	"type" : "web",
+	"version" : 1.0
 }
