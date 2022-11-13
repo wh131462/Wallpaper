@@ -42,4 +42,5 @@ echo "%%i",>>%json%
 )
 echo ]}>>%json%
 echo ScanIsSuccessful
+del tem.txt
 pause
