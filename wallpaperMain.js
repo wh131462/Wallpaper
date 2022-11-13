@@ -1,4 +1,5 @@
 //资源列表生成
+let Wall;
 let dir = {};
 // let baseUri = document?.currentScript?.src.toString().replace(/wallpaperMain\.js$/mi, "").replace(/^(http|https)/, "file");
 //工具
@@ -11,6 +12,14 @@ function getJson() {
         if (request.status == 200) {/*返回状态为200，即为数据获取成功*/
             let json = JSON.parse(request.responseText);
             dir = json;
+            //直接在此初始化了
+            log("欢迎使用Wallpaper --By:wh131462");
+            let dom = document.querySelector('#wallpaper');
+            if(!Wall){
+                log("初始化壁纸 from load")
+                Wall = new Wallpaper(dom)
+                Wall.init();
+            }
             log("json已获取", new Date().valueOf())
         }
     }
@@ -679,7 +688,6 @@ class Wallpaper {
 
     //endregion
 }
-let Wall=undefined;
 //Wallpaper Engine 属性监听对象
 window.wallpaperPropertyListener = {
     applyUserProperties: function (properties) {
@@ -691,16 +699,13 @@ window.wallpaperPropertyListener = {
             let dom = document.querySelector('#wallpaper');
             Wall = new Wallpaper(dom,configs)
             Wall.init();
+        }else{
+            Wall.setConfig(configs)
         }
-        Wall.setConfig(configs)
+
     }
 }
+
 window.onload = () => {
-    log("欢迎使用Wallpaper --By:wh131462");
-    let dom = document.querySelector('#wallpaper');
-    if(!Wall){
-        log("初始化壁纸 from load")
-        Wall = new Wallpaper(dom)
-        Wall.init();
-    }
+
 }
