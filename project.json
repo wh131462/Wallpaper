@@ -1,76 +1,92 @@
 {
+	"authors" : [ "wh13462" ],
+	"contentrating" : "Everyone",
+	"description" : "一个可以自定义资源的壁纸，有一定门槛，但是不高，具体可以查看readme文档，祝大家使用愉快。\ngithub:https://github.com/wh131462/Wallpaper.git",
 	"file" : "index.html",
 	"general" : 
 	{
 		"properties" : 
 		{
-			"mode":{
-					"text" : "播放模式",
-					"options" :
-					[
-						{
-							"label" : "图片轮播",
-							"value" : "img"
-						},
-						{
-							"label" : "视频轮播",
-							"value" : "video"
-						},
-						{
-							"label" : "随机混播",
-							"value" : "random"
-						}
-					],
-					"type" : "combo",
-					"value" : "img"
-				},
-			"contentRandom":
+			"contentRandom" : 
 			{
 				"text" : "内容是否随机播放",
 				"type" : "bool",
 				"value" : true
 			},
-			"loop" :
-				{
-					"text" : "是否循环播放（图片模式设置循环 那么就相当于静态壁纸）",
-					"type" : "bool",
-					"value" : false
-				},
-			"mute":
+			"duration" : 
 			{
-				"text" : "是否静音",
-				"type" : "bool",
-				"value" : false
-			},
-			"duration":{
+				"max" : 60000,
+				"min" : 0,
+				"step" : 500,
 				"text" : "轮播间隔(只针对图片)",
 				"type" : "slider",
-				"step": 500,
-				"min": 0,
-				"max": 60000,
 				"value" : 3000
 			},
-			"isTime":
-			{
-				"text" : "是否显示时间",
-				"type" : "bool",
-				"value" : true
-			},
-			"isMotto":
+			"isMotto" : 
 			{
 				"text" : "是否显示用户语",
 				"type" : "bool",
 				"value" : true
 			},
-			"motto": {
+			"isTime" : 
+			{
+				"text" : "是否显示时间",
+				"type" : "bool",
+				"value" : true
+			},
+			"loop" : 
+			{
+				"text" : "是否循环播放（图片模式设置循环 那么就相当于静态壁纸）",
+				"type" : "bool",
+				"value" : false
+			},
+			"mode" : 
+			{
+				"options" : 
+				[
+					{
+						"label" : "图片轮播",
+						"value" : "img"
+					},
+					{
+						"label" : "视频轮播",
+						"value" : "video"
+					},
+					{
+						"label" : "随机混播",
+						"value" : "random"
+					}
+				],
+				"text" : "播放模式",
+				"type" : "combo",
+				"value" : "img"
+			},
+			"motto" : 
+			{
 				"text" : "用户语",
 				"type" : "textinput",
 				"value" : "无限进步"
+			},
+			"mute" : 
+			{
+				"text" : "是否静音",
+				"type" : "bool",
+				"value" : false
+			},
+			"schemecolor" : 
+			{
+				"order" : 0,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0 0 0"
 			}
 		}
 	},
+	"preview" : "preview.jpg",
+	"tags" : [ "Unspecified" ],
 	"title" : "Wallpaper - 可以自定义资源的轮播壁纸",
-	"authors": ["wh13462"],
 	"type" : "web",
-	"version" : 1.0
+	"version" : 1,
+	"workshopid" : "2888596090",
+	"workshopurl" : "steam://url/CommunityFilePage/2888596090"
 }
