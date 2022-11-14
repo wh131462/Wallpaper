@@ -113,6 +113,10 @@ class Wallpaper {
     Player={
         currentPlayer: undefined,
     };
+    //设置的dom对象
+    SettingDom={
+
+    }
 
     constructor(dom, config) {
         //更新配置已经初始化 基本资源
@@ -137,13 +141,9 @@ class Wallpaper {
      */
     setConfig(config) {
         if (config) {
-            Object.keys(this.Setting).forEach(key => {
-                if(this.Setting[key]!==config[key]){
-                    this.Setting[key] = config[key];
-                    this.syncSetting(key)
-                }
-            })
-            log("配置同步完成", this.Setting)
+            Object.assign(this.Setting,config);
+            this.syncSetting(Object.keys(config)[0]);
+            log("配置同步完成", this.Setting,config)
         }
     }
     /**
@@ -566,6 +566,8 @@ class Wallpaper {
                 this.initLog()
                 break;
         }
+        //同步显示
+        this.syncSettingDisplay();
     }
 
     /**
@@ -681,31 +683,41 @@ class Wallpaper {
                 break;
         }
 
+        this.SettingDom[key]=input;
         dom.appendChild(label);
         dom.appendChild(input);
         container.appendChild(dom);
     }
 
+    syncSettingDisplay(){
+        Object.keys(this.SettingDom).forEach(key=> {
+            switch (typeof this.Setting[key]) {
+                case "string":
+                case "number":
+                    this.SettingDom[key].value = this.Setting[key];
+                    break;
+                case "boolean":
+                    this.SettingDom[key].checked = this.Setting[key];
+                    break;
+            }
+        })
+    }
     //endregion
 }
 //Wallpaper Engine 属性监听对象
 window.wallpaperPropertyListener = {
-    applyUserProperties: function (properties) {
-        let configs=properties.map(config=>{
-            return config.value;
+    applyUserProperties:(properties)=>{
+        log("属性",properties)
+        Object.keys(properties).forEach(key=>{
+            let config={};
+            config[key]=properties[key].value;
+            Wall.setConfig(config)
         })
         if(!Wall){
             log("初始化壁纸 from engine")
             let dom = document.querySelector('#wallpaper');
-            Wall = new Wallpaper(dom,configs)
+            Wall = new Wallpaper(dom,config)
             Wall.init();
-        }else{
-            Wall.setConfig(configs)
         }
-
     }
-}
-
-window.onload = () => {
-
 }

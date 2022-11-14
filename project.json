@@ -64,7 +64,7 @@
 			},
 			"motto": {
 				"text" : "用户语",
-				"type" : "text",
+				"type" : "textinput",
 				"value" : "无限进步"
 			}
 		}
