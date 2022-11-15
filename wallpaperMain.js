@@ -401,10 +401,10 @@ class Wallpaper {
             this.wallpaper.appendChild(dom);
         }
         let date = new Date().format("hh:mm:ss");
-        timeDom.querySelector('p').innerText =this.Setting.isTime ? date:"";
+        timeDom.querySelector('p').innerHTML =this.Setting.isTime ? date:"";
         this._timeTimer = setInterval(() => {
             let date = new Date().format("hh:mm:ss");
-            timeDom.querySelector('p').innerText =this.Setting.isTime ? date:"";
+            timeDom.querySelector('p').innerHTML =this.Setting.isTime ? date:"";
         }, 1000)
     }
 
@@ -419,7 +419,7 @@ class Wallpaper {
             mottoDom = dom;
             this.wallpaper.appendChild(dom);
         }
-        mottoDom.querySelector('p').innerText = this.Setting.isMotto ? this.Setting.motto : "";
+        mottoDom.querySelector('p').innerHTML = this.Setting.isMotto ? this.Setting.motto : "";
     }
 
     //初始化日志
