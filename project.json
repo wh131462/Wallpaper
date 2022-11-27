@@ -28,6 +28,12 @@
 				"type" : "bool",
 				"value" : true
 			},
+			"isRipple" : 
+			{
+				"text" : "是否开启波纹 优先级最高 开启将无法轮播",
+				"type" : "bool",
+				"value" : false
+			},
 			"isTime" : 
 			{
 				"text" : "是否显示时间",
@@ -61,12 +67,6 @@
 				"type" : "combo",
 				"value" : "img"
 			},
-			"isRipple" :
-			{
-				"text" : "是否开启波纹 优先级最高 开启将无法轮播",
-				"type" : "bool",
-				"value" : false
-			},
 			"motto" : 
 			{
 				"text" : "用户语",
@@ -88,11 +88,14 @@
 			}
 		}
 	},
-	"preview" : "preview.jpg",
+	"preview" : "preview.gif",
+	"snapshotformat" : 0,
+	"snapshotoverlay" : "",
 	"tags" : [ "Unspecified" ],
 	"title" : "Wallpaper - 可以自定义资源的轮播壁纸",
 	"type" : "web",
-	"version" : 1,
+	"version" : 2,
+	"visibility" : "public",
 	"workshopid" : "2888596090",
 	"workshopurl" : "steam://url/CommunityFilePage/2888596090"
 }

@@ -95,7 +95,7 @@
     height: 100vh;
     background: #000000;/*基础背景色*/
 }
-#wallpaper audio{
+audio{
     position: absolute;
     top: 0;
     left: 0;
@@ -163,7 +163,6 @@
     border-radius: 10px;
     font-family: 'jy';
     font-size: 12px;
-
 }
 .setting-div{
     width: 100%;
