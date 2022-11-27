@@ -226,79 +226,81 @@ class Wallpaper {
             if (!this.wallpaper.querySelector('video')) {
                 contentDom = document.createElement('video');
                 this.wallpaper.appendChild(contentDom);
+                contentDom.autoplay = true;
+                contentDom.onplaying=(e)=>{
+                    console.log("playing",e)
+                    let name=decodeURI(e.target.src.replace(/^.*video\//,"").replace(/\.(mp4|mp3|ogg|webm|acc|wav|flac)$/i,""));
+                    this.Player.title.innerHTML=name;
+                    if(this.Player.timeTimer){
+                        clearInterval(this.Player.timeTimer);
+                    }
+                    this.Player.timeTimer=setInterval(()=>{
+                        this.Player.time.innerHTML=this.toTime(e.target.currentTime)+'/'+this.toTime(e.target.duration);
+                        this.Player.progress.style.width=((e.target.currentTime/e.target.duration)*100)+'%';
+                    },500);
+                }
+                // contentDom.onloadeddata = (e) => {
+                //     log("视频时长", contentDom.duration)
+                //     contentDom.currentTime = contentDom.duration - 5;
+                //     console.dir(contentDom)
+                // }
+                contentDom.onpause=()=>{
+                    this.Player.play.src='./resources/icon/play.png'
+                }
+                contentDom.onplay=()=>{
+                    this.Player.play.src='./resources/icon/pause.png'
+                }
+                contentDom.onended = (e) => {
+                    if (!this.Setting.loop) {
+                        this.next(this.Player.type);
+                    }
+                }
             } else {
                 contentDom = this.wallpaper.querySelector("video");
             }
             contentDom.src = resource.src;
-            contentDom.autoplay = true;
             contentDom.loop = this.Setting.loop;
-            contentDom.onplaying=(e)=>{
-                console.log("playing",e)
-                let name=decodeURI(e.target.src.replace(/^.*video\//,"").replace(/\.(mp4|mp3|ogg|webm|acc|wav|flac)$/i,""));
-                this.Player.title.innerHTML=name;
-                if(this.Player.timeTimer){
-                    clearInterval(this.Player.timeTimer);
-                }
-                this.Player.timeTimer=setInterval(()=>{
-                    this.Player.time.innerHTML=this.toTime(e.target.currentTime)+'/'+this.toTime(e.target.duration);
-                    this.Player.progress.style.width=((e.target.currentTime/e.target.duration)*100)+'%';
-                },500);
-            }
-            // contentDom.onloadeddata = (e) => {
-            //     log("视频时长", contentDom.duration)
-            //     contentDom.currentTime = contentDom.duration - 5;
-            //     console.dir(contentDom)
-            // }
-            contentDom.onpause=()=>{
-                this.Player.play.src='./resources/icon/play.png'
-            }
-            contentDom.onplay=()=>{
-                this.Player.play.src='./resources/icon/pause.png'
-            }
-            contentDom.onended = (e) => {
-                if (!this.Setting.loop) {
-                    this.next(this.Player.type);
-                }
-            }
+            if(this.Player.currentPlayer) this.Player.currentPlayer.pause();
             this.Player.currentPlayer=contentDom;
+            this.Player.currentPlayer.play();
             this.Player.type="video";
-
         } else if (resource.type === "audio") {
             if (!document.querySelector('audio')) {
                 contentDom = document.createElement('audio');
                 document.body.appendChild(contentDom);
+                contentDom.autoplay = true;
+                contentDom.onplaying=(e)=>{
+                    console.log("playing",e)
+                    let name=decodeURI(e.target.src.replace(/^.*audio\//,"").replace(/\.(mp3|ogg|webm|acc|wav|flac)$/i,""));
+                    this.Player.title.innerHTML=name;
+                    if(this.Player.timeTimer){
+                        clearInterval(this.Player.timeTimer);
+                    }
+                    this.Player.timeTimer=setInterval(()=> {
+                        this.Player.time.innerHTML = this.toTime(e.target.currentTime) + '/' + this.toTime(e.target.duration)
+                        this.Player.progress.style.width=((e.target.currentTime/e.target.duration)*100)+'%';
+                    },500);
+                }
+                contentDom.onpause=()=>{
+                    this.Player.play.src='./resources/icon/play.png'
+                }
+                contentDom.onplay=()=>{
+                    this.Player.play.src='./resources/icon/pause.png'
+                }
+                contentDom.onended = (e) => {
+                    if (!this.Setting.loop) {
+                        this.next(this.Player.type);
+                    }
+                }
             } else {
                 contentDom = document.querySelector("audio");
             }
             contentDom.src = resource.src;
-            contentDom.autoplay = true;
             contentDom.loop = this.Setting.loop;
-            contentDom.onplaying=(e)=>{
-                console.log("playing",e)
-                let name=decodeURI(e.target.src.replace(/^.*audio\//,"").replace(/\.(mp3|ogg|webm|acc|wav|flac)$/i,""));
-                this.Player.title.innerHTML=name;
-                if(this.Player.timeTimer){
-                    clearInterval(this.Player.timeTimer);
-                }
-                this.Player.timeTimer=setInterval(()=> {
-                    this.Player.time.innerHTML = this.toTime(e.target.currentTime) + '/' + this.toTime(e.target.duration)
-                    this.Player.progress.style.width=((e.target.currentTime/e.target.duration)*100)+'%';
-                },500);
-            }
-            contentDom.onpause=()=>{
-                this.Player.play.src='./resources/icon/play.png'
-            }
-            contentDom.onplay=()=>{
-                this.Player.play.src='./resources/icon/pause.png'
-            }
-            contentDom.onended = (e) => {
-                if (!this.Setting.loop) {
-                    this.next(this.Player.type);
-                }
-            }
+            if(this.Player.currentPlayer) this.Player.currentPlayer.pause();
             this.Player.currentPlayer=contentDom;
+            this.Player.currentPlayer.play();
             this.Player.type="audio";
-
         }
         this.content = resource;
         this.content.dom = contentDom;
