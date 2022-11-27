@@ -27,6 +27,14 @@
     white-space: break-spaces;
     word-break: break-all;
 }
+#canvas{
+    z-index: 98;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 #wallpaper{
     width: 100vw;
     height: 100vh;
@@ -37,7 +45,7 @@
     overflow: hidden;
     user-select: none;
 }
-#wallpaper .time{
+.wallpaper-time{
     user-select: none;
     position: fixed;
     top: 50%;
@@ -48,7 +56,7 @@
     font-size: 36px;
     z-index: 99;
 }
-#wallpaper .motto{
+.wallpaper-motto{
     user-select: none;
     position: fixed;
     top: 55%;
@@ -130,6 +138,7 @@
     top: 20px;
     right: 20px;
     opacity: 0;
+    z-index: 99;
 }
 .setting-button:hover{
     opacity: 1;
@@ -144,6 +153,7 @@
 }
 
 .setting{
+    z-index: 99;
     position: fixed;
     top: 50px;
     right: 50px;

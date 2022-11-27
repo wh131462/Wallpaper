@@ -6,10 +6,16 @@ async function initWallpaper(){
     this.Wall = new Wallpaper(dom,dir)
     this.Wall.init();
 }
+function initCanvas(){
 
+
+}
 initWallpaper().then(()=>{
     log("初始化成功！")
-})
+    this.initCanvas();
+});
+
+
 //Wallpaper Engine 属性监听对象
 window.wallpaperPropertyListener = {
     applyUserProperties:(properties)=>{

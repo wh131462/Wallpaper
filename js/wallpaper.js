@@ -4,6 +4,8 @@ class Wallpaper {
         ///////基础配置
         //播放模式
         mode: Mode.img,
+        //开启波纹 每次都是随机图 优先级最高
+        isRipple:false,
         //内容是否随机播放 否则就按顺序变化
         contentRandom: true,
         //是否循环 图片如果循环 那么就相当于静态壁纸
@@ -25,6 +27,7 @@ class Wallpaper {
     //设置的辅助配置
     baseField = [
         {key: "播放模式", value: 'mode'},
+        {key: "是否开启波纹 每次都是随机图 优先级最高", value: 'isRipple'},
         {key: "是否随机播放内容", value: 'contentRandom'},
         {key: "是否开启循环", value: 'loop'},
         {key: "是否静音", value: 'mute'},
@@ -37,9 +40,11 @@ class Wallpaper {
         {key: "是否显示日志", value: "isLog"}
     ];
     wallpaper;//dom元素
+    ripple;//波纹寄存
     content = null;//内容存放对象
     timer = null;//主计时器
     _timeTimer = null;//时间专用计时器
+    _rippleTimer=null;//波纹专用计时器
     resources;
     //播放器对象
     Player={
@@ -81,7 +86,7 @@ class Wallpaper {
     /**
      *     render渲染函数 更改某些配置将执行
      */
-    render() {
+    render(isOnly=false) {
         this.clearContainer()
         if (this.timer) {
             clearInterval(this.timer);
@@ -93,7 +98,7 @@ class Wallpaper {
         //按模式加载
         switch (this.Setting.mode) {
             case "img":
-                this.initImg();
+                this.initImg(isOnly);
                 break;
             case "video":
                 this.initVideo();
@@ -102,15 +107,16 @@ class Wallpaper {
                 this.initRandom();
                 break;
         }
+        this.initRipple();
     }
 
-    initImg() {
+    initImg(isOnly=false) {
         if (this.timer) {
             clearInterval(this.timer)
         }
         let {duration} = this.Setting;
         this.next('img');
-        this.next("audio")
+        if(!isOnly)this.next("audio")
         this.timer = setInterval(() => this.next('img'), duration);
     }
 
@@ -149,13 +155,13 @@ class Wallpaper {
         let resource;
         switch (type) {
             case "img":
-                curIndex = img.findIndex(i => i.src == this.content?.src);
+                curIndex = img.findIndex(i => i.src === this.content?.src);
                 len = img.length;
                 //内容随机 就给随机数
                 if (!this.Setting.loop) {
                     index = contentRandom ? this.randomIndex(len, curIndex) : (curIndex + 1) % len;
                 } else {
-                    index = curIndex == -1 ? 0 : curIndex;
+                    index = curIndex === -1 ? 0 : curIndex;
                 }
                 resource = img[index];
                 break;
@@ -165,17 +171,17 @@ class Wallpaper {
                     this.initImg()
                     return;
                 }
-                curIndex = video.findIndex(i => i.src == this.content?.src);
+                curIndex = video.findIndex(i => i.src === this.content?.src);
                 len = video.length;
                 //内容随机 就给随机数
-                index = contentRandom ? this.randomIndex(len, curIndex) :m==0?(curIndex + 1) % len:(curIndex==0?len-1:curIndex-1);
+                index = contentRandom ? this.randomIndex(len, curIndex) :m===0?(curIndex + 1) % len:(curIndex===0?len-1:curIndex-1);
                 resource = video[index];
                 break;
             case "audio":
-                curIndex = audio.findIndex(i => i.src == this.content?.src);
+                curIndex = audio.findIndex(i => i.src === this.content?.src);
                 len = audio.length;
                 //内容随机 就给随机数
-                index = contentRandom ? this.randomIndex(len, curIndex) : m==0?(curIndex + 1) % len:(curIndex==0?len-1:curIndex-1);
+                index = contentRandom ? this.randomIndex(len, curIndex) : m===0?(curIndex + 1) % len:(curIndex===0?len-1:curIndex-1);
                 resource = audio[index];
                 break;
             case "random":
@@ -197,7 +203,7 @@ class Wallpaper {
     setContent(resource) {
         if (!resource) return;
         let contentDom;
-        if (resource.type == "img") {
+        if (resource.type === "img") {
             let lastDom = this.wallpaper.querySelector('.now-img');
             if (lastDom) {
                 if (this.Setting.loop) {
@@ -215,9 +221,11 @@ class Wallpaper {
             contentDom.alt = resource.name;
             contentDom.src = resource.src;
             contentDom.draggable = false;
-        } else if (resource.type == "video") {
+            this.wallpaper.appendChild(contentDom);
+        } else if (resource.type === "video") {
             if (!this.wallpaper.querySelector('video')) {
                 contentDom = document.createElement('video');
+                this.wallpaper.appendChild(contentDom);
             } else {
                 contentDom = this.wallpaper.querySelector("video");
             }
@@ -254,11 +262,13 @@ class Wallpaper {
             }
             this.Player.currentPlayer=contentDom;
             this.Player.type="video";
-        } else if (resource.type == "audio") {
-            if (!this.wallpaper.querySelector('audio')) {
+
+        } else if (resource.type === "audio") {
+            if (!document.querySelector('audio')) {
                 contentDom = document.createElement('audio');
+                document.body.appendChild(contentDom);
             } else {
-                contentDom = this.wallpaper.querySelector("audio");
+                contentDom = document.querySelector("audio");
             }
             contentDom.src = resource.src;
             contentDom.autoplay = true;
@@ -288,10 +298,10 @@ class Wallpaper {
             }
             this.Player.currentPlayer=contentDom;
             this.Player.type="audio";
+
         }
         this.content = resource;
         this.content.dom = contentDom;
-        this.wallpaper.appendChild(contentDom);
         if (this.Setting.mute) {
             if (document.querySelector('video')) document.querySelector('video').muted = true;
             if (document.querySelector('audio')) document.querySelector('audio').muted = true;
@@ -323,14 +333,15 @@ class Wallpaper {
         if (this._timeTimer) {
             clearInterval(this._timeTimer);
         }
-        let timeDom = this.wallpaper.querySelector('.time');
+        let timeDom = document.querySelector('.wallpaper-time');
+        console.log(timeDom)
         if (timeDom === null) {
             let dom = document.createElement('div'),
                 p = document.createElement('p');
-            dom.classList.add('time');
+            dom.classList.add('wallpaper-time');
             dom.appendChild(p);
             timeDom = dom;
-            this.wallpaper.appendChild(dom);
+            document.body.appendChild(dom);
         }
         let date = new Date().format("hh:mm:ss");
         timeDom.querySelector('p').innerHTML =this.Setting.isTime ? date:"";
@@ -342,22 +353,57 @@ class Wallpaper {
 
     //初始化座右铭
     initMotto() {
-        let mottoDom = this.wallpaper.querySelector('.motto');
+        let mottoDom = document.querySelector('.wallpaper-motto');
         if (mottoDom === null) {
             let dom = document.createElement('div'),
                 p = document.createElement('p');
-            dom.classList.add('motto');
+            dom.classList.add('wallpaper-motto');
             dom.appendChild(p);
             mottoDom = dom;
-            this.wallpaper.appendChild(dom);
+            document.body.appendChild(dom);
         }
         mottoDom.querySelector('p').innerHTML = this.Setting.isMotto ? this.Setting.motto : "";
     }
+    initRipple(){
+        let canvas=document.querySelector("#canvas");
+        canvas.width=window.innerWidth;
+        canvas.height=window.innerHeight;
+        if(this.Setting.isRipple){
+            clearInterval(this.timer);
+            this.timer=null;
+            canvas.hidden=false;
+            let curIndex = this.resources.img.findIndex(i => i.src === this.content?.src);
+            let len = this.resources.img.length;
+            //内容随机 就给随机数
+            let index = this.randomIndex(len, curIndex);
+            let domImg=this.resources.img[index];
+            let img=new Image();
+            img.src=domImg.src;
+            if(this.ripple){
+                this.ripple.changeBackground(img);
+            }else{
+                this.ripple=new WaterRipple({
+                    canvas:canvas,
+                    background:img
+                })
+                this.ripple.animate()
+                this._rippleTimer=setInterval(()=>{
+                    let x = Math.floor(canvas.width*Math.random())
+                    let y = Math.floor(canvas.height*Math.random())
+                    this.ripple.ripple(x, y)
+                }, 1000)
+                this.ripple.addMousemove()
+            }
+        }else{
+            clearInterval(this._rippleTimer);
+            canvas.hidden=true;
+        }
 
+    }
     //初始化日志
     initLog() {
         let dom = document.querySelector('#log')
-        dom.style.opacity = this.Setting.isLog == true ? "1" : "0";
+        dom.style.opacity = this.Setting.isLog === true ? "1" : "0";
         log("初始化日志")
     }
 
@@ -464,23 +510,26 @@ class Wallpaper {
             case 'mode':
                 this.render()
                 break;
+            case 'isRipple':
+                this.render(true)
+                break;
             case 'contentRandom':
                 //do nothing
                 break;
             case 'loop':
-                if(mode=="img")
+                if(mode==="img")
                     this.wallpaper.querySelector('audio').loop=this.Setting.loop;
                 else
                     this.wallpaper.querySelector('video').loop=this.Setting.loop;
                 break;
             case 'mute':
-                if(mode=="img")
+                if(mode==="img")
                     this.wallpaper.querySelector('audio').muted=this.Setting.mute;
                 else
                     this.wallpaper.querySelector('video').muted=this.Setting.mute;
                 break;
             case 'duration':
-                if(mode=="img"){
+                if(mode==="img"){
                     if(this.timer)clearInterval(this.timer)
                     this.timer=setInterval(() => this.next('img'), duration);
                 }

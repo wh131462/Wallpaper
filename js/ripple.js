@@ -4,8 +4,8 @@ class WaterRipple {
     }
 
     init(props) {
-        this.canvas = props.canvas
-        this.ctx = this.canvas.getContext('2d', { willReadFrequently: true })
+        this.canvas = this.canvas??props.canvas
+        this.ctx =this.ctx??this.canvas.getContext('2d', { willReadFrequently: true })
         this.width = this.canvas.width
         this.height = this.canvas.height
 
@@ -29,6 +29,10 @@ class WaterRipple {
         if (props.resize) {
             this.setResize()
         }
+    }
+
+    changeBackground(img){
+        this.init({background:img})
     }
 
     drawBackground() {
@@ -130,7 +134,6 @@ class WaterRipple {
     ripple(x, y) {
         if(!this.load)
             return
-
         let left = Math.max(x - this.ripple_radius, 0),
             right = Math.min(x + this.ripple_radius, this.buffer_1.length - 1),
             top = Math.max(y - this.ripple_radius, 0),

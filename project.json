@@ -61,6 +61,12 @@
 				"type" : "combo",
 				"value" : "img"
 			},
+			"isRipple" :
+			{
+				"text" : "是否开启波纹 优先级最高 开启将无法轮播",
+				"type" : "bool",
+				"value" : false
+			},
 			"motto" : 
 			{
 				"text" : "用户语",
