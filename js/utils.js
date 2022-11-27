@@ -31,9 +31,8 @@ console.error = (...rest) => {
 
 
 //工具
-async function getJson() {
+async function getJson(url) {
     return new Promise(resolve => {
-        let url = '../dir.json';
         let request = new XMLHttpRequest();
         request.open("get", url);/*设置请求方法与路径*/
         request.send(null);/*不发送数据到服务器*/

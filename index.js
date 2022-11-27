@@ -1,20 +1,16 @@
 async function initWallpaper(){
-    let dir=await getJson();
+    let url= './dir.json';
+    let dir=await getJson(url);
     let dom = document.querySelector('#wallpaper');
     //直接在此初始化
     log("欢迎使用Wallpaper --By:wh131462");
     this.Wall = new Wallpaper(dom,dir)
     this.Wall.init();
 }
-function initCanvas(){
 
-
-}
 initWallpaper().then(()=>{
     log("初始化成功！")
-    this.initCanvas();
 });
-
 
 //Wallpaper Engine 属性监听对象
 window.wallpaperPropertyListener = {
