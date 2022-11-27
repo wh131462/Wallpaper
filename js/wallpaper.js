@@ -1,71 +1,3 @@
-//资源列表生成
-let Wall;
-let dir = {};
-// let baseUri = document?.currentScript?.src.toString().replace(/wallpaperMain\.js$/mi, "").replace(/^(http|https)/, "file");
-//工具
-function getJson() {
-    let url = './dir.json';
-    let request = new XMLHttpRequest();
-    request.open("get", url);/*设置请求方法与路径*/
-    request.send(null);/*不发送数据到服务器*/
-    request.onload = function () {/*XHR对象获取到返回信息后执行*/
-        if (request.status == 200) {/*返回状态为200，即为数据获取成功*/
-            let json = JSON.parse(request.responseText);
-            dir = json;
-            //直接在此初始化了
-            log("欢迎使用Wallpaper --By:wh131462");
-            let dom = document.querySelector('#wallpaper');
-            if(!Wall){
-                log("初始化壁纸 from load")
-                Wall = new Wallpaper(dom)
-                Wall.init();
-            }
-            log("json已获取", new Date().valueOf())
-        }
-    }
-}
-getJson();
-console.error = (...rest) => {
-    log("ERR:",...rest)
-}
-function log(mes, ...objs) {
-    let content = mes;
-    objs.forEach(item => {
-        if (item instanceof Object) {
-            content += "<p>" + JSON.stringify(item) + '</p>';
-        } else {
-            content += "<p>" + item + '</p>';
-        }
-    })
-    console.log(content);
-    document.querySelector('#log').innerHTML += '<p>' + content + '</p>';
-}
-Date.prototype.format = function (fmt) {
-    let o = {
-        "M+": this.getMonth() + 1,                 //月份
-        "d+": this.getDate(),                    //日
-        "h+": this.getHours(),                   //小时
-        "m+": this.getMinutes(),                 //分
-        "s+": this.getSeconds(),                 //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds()             //毫秒
-    };
-    if (/(y+)/.test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    }
-    for (let k in o) {
-        if (new RegExp("(" + k + ")").test(fmt)) {
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-        }
-    }
-    return fmt;
-}
-const Mode = {
-    "img": "img",
-    "video": "video",
-    "random": "random"
-}
-
 class Wallpaper {
     //全局设置
     Setting = {
@@ -118,7 +50,7 @@ class Wallpaper {
 
     }
 
-    constructor(dom, config) {
+    constructor(dom,dir,config) {
         //更新配置已经初始化 基本资源
         this.wallpaper = dom;
         this.setConfig(config)
@@ -703,21 +635,4 @@ class Wallpaper {
         })
     }
     //endregion
-}
-//Wallpaper Engine 属性监听对象
-window.wallpaperPropertyListener = {
-    applyUserProperties:(properties)=>{
-        log("属性",properties)
-        Object.keys(properties).forEach(key=>{
-            let config={};
-            config[key]=properties[key].value;
-            Wall.setConfig(config)
-        })
-        if(!Wall){
-            log("初始化壁纸 from engine")
-            let dom = document.querySelector('#wallpaper');
-            Wall = new Wallpaper(dom,config)
-            Wall.init();
-        }
-    }
 }
